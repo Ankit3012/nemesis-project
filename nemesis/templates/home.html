@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">User Details</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">{{name}} <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="http://127.0.0.1:8000/">Logout</a>
+      </li>
+
+    </ul>
+  </div>
+</nav>
+{% for all in alldata %}
+<div class="list">
+  <ul class="list-group">
+  <li class="list-group-item">{{all}}&nbsp;&nbsp;&nbsp;<button type="button" id={{all.email}} onclick="edit(this.id)" class="btn btn-warning">Edit</button>&nbsp;&nbsp;&nbsp<button type="button" id={{all.email}} class="btn btn-danger">Delete</button></li>
+
+</ul>
+</div>
+{% endfor %}
+
+<p class="h1">Edit user</p>
+<div class="container">   
+            <label>Name : </label>   
+            <input type="text" class="form-control" id="unam" placeholder="Name" name="name" value="">  
+            <label>Email : </label>   
+            <input type="email" placeholder="Email" id="uema" class="form-control" name="Email" value="">  
+            
+            <label>Address: </label>   
+            <input type="text" class="form-control" id="uadd" placeholder="Address" name="address">    
+            <button type="button" class="btn btn-primary" onclick="update()">Save</button> 
+             
+        </div>   
+<script type="text/javascript">
+  function update(){
+    var a=document.getElementById("unam").value;
+    var b=document.getElementById("uema").value;
+    var c=document.getElementById("uadd").value;
+    var URL="{% url 'update/' %}"
+            var mydata={'user':a,'email':b,'add':c}
+            $.ajax({
+            type: 'POST',
+            url: URL,
+            data: mydata,
+            success: function(data){
+                
+               alert('data updated!');
+            },
+            error: function(error){
+                console.log(error)
+            },
+            
+        });
+  }
+</script>
+
+<script type="text/javascript">
+  function edit(a){
+
+console.log(a)
+   
+            var URL="{% url 'ser/' %}"
+            var mydata={'user':a}
+            $.ajax({
+            type: 'POST',
+            url: URL,
+            data: mydata,
+            success: function(data){
+                
+               document.getElementById("unam").value = data.serial.name;
+               document.getElementById("uema").value = data.serial.email;
+               document.getElementById("uadd").value = data.serial.add;
+            },
+            error: function(error){
+                console.log(error)
+            },
+            
+        });
+    }
+</script>
+
+</body>
+
+</html>
